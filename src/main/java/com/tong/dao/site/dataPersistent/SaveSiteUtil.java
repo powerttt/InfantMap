@@ -1,8 +1,11 @@
-package com.map.dataPersistent;
+package com.tong.dao.site.dataPersistent;
 
 import redis.clients.jedis.Jedis;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 
 /**
@@ -22,18 +25,18 @@ public class SaveSiteUtil implements Serializable {
 
     /**
      *      以字节方式保存在redis缓存当中
-     * @param object 序列化后的对象
+     * @param siteNameMap 序列化后的对象
      * @param objName 序列化后的对象名
      * @return 是否保存在redis当中
      */
-    public static boolean saveInRedis(Object object,String objName){
+    public static boolean saveInRedis(Map<String, HashSet<Integer>> siteNameMap, String objName){
         Jedis jedis=new Jedis("localhost");
         byte[] objByte=null;
         try {
             baos=new ByteArrayOutputStream();
             oos=new ObjectOutputStream(baos);
 //           将对象转换为字节数组
-            oos.writeObject(object);
+            oos.writeObject(siteNameMap);
             objByte=baos.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,13 +51,13 @@ public class SaveSiteUtil implements Serializable {
      * @param objByte 对象数组
      * @return 反序列化得到的对象
      */
-    public static Object readInRedis(byte[] objByte){
+    public static Map<String, HashSet<Integer>> readInRedis(byte[] objByte){
         Jedis jedis=new Jedis("localhost");
-        Object o=null;
+        Map<String, HashSet<Integer>> o=null;
         try {
             bais=new ByteArrayInputStream(objByte);
             ois=new ObjectInputStream(bais);
-            o=ois.readObject();
+            o=(HashMap<String, HashSet<Integer>>)ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -62,6 +65,9 @@ public class SaveSiteUtil implements Serializable {
         }
         return o;
     }
+
+
+
 
 
 }
