@@ -9,8 +9,5 @@
         <module name="InfantMap" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="InfantMap" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
